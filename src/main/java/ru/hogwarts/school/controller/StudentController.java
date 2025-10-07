@@ -39,7 +39,7 @@ public class StudentController {
         if (foundStudent ==  null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return  ResponseEntity.ok().build();
+        return  ResponseEntity.ok(foundStudent);
     }
 
     @DeleteMapping("{id}")
@@ -49,9 +49,12 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
-        if (age > 0) {
+    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) Integer age, @RequestParam(required = false) Integer min, @RequestParam(required = false) Integer max) {
+        if (age != null && age >= 0) {
             return ResponseEntity.ok(studentService.findByAge(age));
+        }
+        if (min != null && max != null && min >= 0 && max >= 0 && min <= max) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(min, max));
         }
         return ResponseEntity.ok(Collections.emptyList());
     }

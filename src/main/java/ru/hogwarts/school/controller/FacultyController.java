@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
@@ -41,7 +42,7 @@ public class FacultyController {
         if (foundFaculty == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(foundFaculty);
     }
 
     @DeleteMapping("{id}")
@@ -50,11 +51,32 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color) {
-        if (color != null && !color.isBlank()) {
-            return ResponseEntity.ok(facultyService.findByColor(color));
+    @GetMapping(params = {"color", "name"})
+    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color, @RequestParam(required = false) String name) {
+
+        if ((color != null && !color.isBlank()) || (name != null && !name.isBlank())){
+            return  ResponseEntity.ok(facultyService.findByNameAndColor(name, color));
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
+
+    @GetMapping("{id}/students")
+    public ResponseEntity<Collection<Student>> getStudentsByFaculty(@PathVariable Long id) {
+        Collection<Student> students = facultyService.getStudentsByFacultyId(id);
+        if (students.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/byStudent/{studentId}")
+    public ResponseEntity<Faculty> getFacultyByStudentId(@PathVariable Long studentId) {
+        Faculty faculty = facultyService.findFacultyByStudentId(studentId);
+        if (faculty == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(faculty);
+    }
+
+
 }
