@@ -1,8 +1,8 @@
 package ru.hogwarts.school.service;
 
-import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.FacultyBadRequestException;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -25,23 +25,30 @@ public class FacultyService {
     }
 
     public Faculty findFaculty(long id){
-        return facultyRepository.findById(id).orElse(null);
+        return facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException("Faculty with id " + id + " not found"));
     }
 
     public Faculty editFaculty(Faculty faculty){
-        if (faculty.getId() != null && facultyRepository.existsById(faculty.getId())) {
-            return facultyRepository.save(faculty);
+        if (faculty.getId() == null && !facultyRepository.existsById(faculty.getId())) {
+            throw new FacultyBadRequestException("Faculty with id " + faculty.getId() + " not found");
         }
-        return null;
+        return facultyRepository.save(faculty);
     }
 
     public void delFaculty(long id){
+        if (!facultyRepository.existsById(id)) {
+            throw new FacultyNotFoundException("Faculty with id " + id + " not found for deletion");
+        }
         facultyRepository.deleteById(id);
     }
 
 
     public Collection<Faculty> findByColor(String color) {
-        return facultyRepository.findByColor(color);
+        return facultyRepository.findByColorIgnoreCase(color);
+    }
+
+    public Collection<Faculty> findByName(String name) {
+        return facultyRepository.findByNameIgnoreCase(name);
     }
 
     public Collection<Faculty> findByNameAndColor(String name, String color){
@@ -49,21 +56,13 @@ public class FacultyService {
     }
 
     public Faculty findFacultyByStudentId(Long studentId) {
-        return facultyRepository.findByStudentsId(studentId);
+        return facultyRepository.findByStudentsId(studentId).orElseThrow(() -> new FacultyNotFoundException("Faculty for student with id " + studentId + " not found"));
     }
 
     public Collection<Student> getStudentsByFacultyId(Long facultyId) {
+        if (!facultyRepository.existsById(facultyId)) {
+            throw new FacultyNotFoundException("Faculty with id " + facultyId + " not found");
+        }
         return studentRepository.findByFacultyId(facultyId);
     }
-
-    @Transactional
-    public Faculty findFacultyWithStudents(long id) {
-        Faculty faculty = facultyRepository.findById(id).orElse(null);
-        if (faculty != null) {
-            Hibernate.initialize(faculty.getStudents());
-            // faculty.getStudents().size();
-        }
-        return faculty;
-    }
-
 }
