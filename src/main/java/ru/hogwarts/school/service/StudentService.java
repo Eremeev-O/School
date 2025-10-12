@@ -40,7 +40,7 @@ public class StudentService {
     }
 
     public Collection<Student> findByAge(int age) {
-        if (age < 0) {
+        if (age <= 0) {
             return Collections.emptyList();
         }
         return studentRepository.findByAge(age);
