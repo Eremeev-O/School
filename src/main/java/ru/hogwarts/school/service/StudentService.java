@@ -8,6 +8,7 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -38,6 +39,20 @@ public class StudentService {
         }
         studentRepository.deleteById(id);
     }
+
+    public Integer getStudentCount(){
+        return studentRepository.getStudentCount();
+    }
+
+    public Float getStudentAvgAge(){
+        return studentRepository.getStudentAvgAge();
+    }
+
+    public List<Student> getLastFiveStudent(){
+        return studentRepository.getLastFiveStudent();
+    }
+
+
 
     public Collection<Student> findByAge(int age) {
         if (age <= 0) {
