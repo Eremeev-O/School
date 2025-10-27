@@ -5,7 +5,6 @@ CREATE TABLE cars (
 	cost int4
 	);
 
-
 CREATE TABLE driver (
 	id SMALLSERIAL PRIMARY KEY,
 	name VARCHAR (100),
