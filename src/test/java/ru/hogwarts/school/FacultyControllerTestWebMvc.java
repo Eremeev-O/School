@@ -140,8 +140,8 @@ public class FacultyControllerTestWebMvc {
 
     @Test
     void testGetStudentsByFaculty() throws Exception {
-        Student student1 = new Student(1L, "ГарриПотный", 15);
-        Student student2 = new Student(2L, "Володя", 12);
+        Student student1 = new Student(1L, "ГарриПотный", 19);
+        Student student2 = new Student(2L, "Володя", 17);
         when(facultyService.getStudentsByFacultyId(anyLong())).thenReturn(List.of(student1, student2));
 
         mockMvc.perform(get("/faculty/1/students")
