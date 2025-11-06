@@ -81,4 +81,9 @@ public class FacultyService {
         }
         return studentRepository.findByFacultyId(facultyId);
     }
+
+    public String maxLongNameFaculty() {
+        logger.info("Was invoked method for get maxLongNameFaculty");
+        return facultyRepository.maxLongNameFaculty();
+    }
 }

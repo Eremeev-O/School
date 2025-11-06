@@ -2,15 +2,16 @@ package ru.hogwarts.school.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.StudentBadRequestException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.LongStream;
+
 
 @Service
 public class StudentService {
@@ -81,5 +82,37 @@ public class StudentService {
             return Collections.emptyList();
         }
         return studentRepository.findByAgeBetween(min, max);
+    }
+
+    public List<String> findAllStudentName() {
+        logger.info("Was invoked method for find all name of student");
+        List<String> students = studentRepository.findAll(Sort.by(Sort.Direction.ASC, "name")).stream()
+                .filter(name -> name.getName().charAt(0) == 'А')
+                .map(name -> name.getName().toUpperCase())
+                .toList();
+        return students;
+    }
+
+    public Double findAllStudentAverageAge() {
+        logger.info("Was invoked method for find average age of student");
+        Double averageAge = studentRepository.findAll().stream()
+                .map(name -> name.getAge())
+                .mapToDouble(Integer::doubleValue)
+                .average()
+                .getAsDouble();
+        return  averageAge;
+
+    }
+    // только такой вариант переделаннго срима показал результат. Добавление .parallel() в исходную формулу, указанную
+    // в д/з, показывает только ухудшение результата
+    public Long integerValueCalculation() {
+        logger.info("Was invoked method for calculate Int");
+        long startTime = System.nanoTime();
+        long sum = LongStream.rangeClosed(1,1000000)
+                .parallel()
+                .sum();
+        long endTime = System.nanoTime();
+        System.out.println("Время выполнения :" + (endTime - startTime)/1000000 + "мс");
+            return sum;
     }
 }

@@ -66,5 +66,20 @@ public class StudentController {
         return studentService.getLastFiveStudent();
     }
 
+    @GetMapping("/find-all-student")
+    public List<String> findAllStudentName(){
+        return studentService.findAllStudentName();
+    }
+
+    @GetMapping("/find-all-student-average-age")
+    public Double findAllStudentAverageAge() {
+        return studentService.findAllStudentAverageAge();
+    }
+
+    @GetMapping("/int")
+    public Long integerValueCalculation(){
+        return studentService.integerValueCalculation();
+    }
+
 
 }
