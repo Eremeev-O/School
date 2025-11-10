@@ -38,21 +38,21 @@ public class StudentControllerTestWebMvc {
 
     @Test
     void testCreateStudent() throws Exception {
-        Student student = new Student(1L, "ГарриПотный", 10);
+        Student student = new Student(1L, "ГарриПотный", 16);
         when(studentService.addStudent(any(Student.class))).thenReturn(student);
 
         mockMvc.perform(post("/student")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new Student(null, "ГарриПотный", 10))))
+                        .content(objectMapper.writeValueAsString(new Student(null, "ГарриПотный", 16))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("ГарриПотный"))
-                .andExpect(jsonPath("$.age").value(10));
+                .andExpect(jsonPath("$.age").value(16));
     }
 
     @Test
     void testGetStudentInfo() throws Exception {
-        Student student = new Student(1L, "Санько", 13);
+        Student student = new Student(1L, "Санько", 19);
         when(studentService.findStudent(anyLong())).thenReturn(student);
 
         mockMvc.perform(get("/student/1")
@@ -60,7 +60,7 @@ public class StudentControllerTestWebMvc {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Санько"))
-                .andExpect(jsonPath("$.age").value(13));
+                .andExpect(jsonPath("$.age").value(19));
     }
 
     // Хотим получить информацию о несуществующем студенте
@@ -111,11 +111,11 @@ public class StudentControllerTestWebMvc {
 
     @Test
     void testFindStudentsByAgeBetween() throws Exception {
-        Student student1 = new Student(1L, "Гиви", 10);
-        Student student2 = new Student(2L, "ГарриПотный", 15);
-        when(studentService.findByAgeBetween(10, 15)).thenReturn(List.of(student1, student2));
+        Student student1 = new Student(1L, "Гиви", 16);
+        Student student2 = new Student(2L, "ГарриПотный", 21);
+        when(studentService.findByAgeBetween(16, 21)).thenReturn(List.of(student1, student2));
 
-        mockMvc.perform(get("/student?min=10&max=15")
+        mockMvc.perform(get("/student?min=16&max=21")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -126,7 +126,7 @@ public class StudentControllerTestWebMvc {
 
     @Test
     void testFindStudentsNoParams() throws Exception {
-        Student student = new Student(1L, "ГарриПотный", 15);
+        Student student = new Student(1L, "ГарриПотный", 21);
         when(studentService.findByAge(0)).thenReturn(Collections.emptyList());
         mockMvc.perform(get("/student")
                         .accept(MediaType.APPLICATION_JSON))

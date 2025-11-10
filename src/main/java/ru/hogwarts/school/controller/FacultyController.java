@@ -66,4 +66,9 @@ public class FacultyController {
     public Faculty getFacultyByStudentId(@PathVariable Long studentId) {
         return facultyService.findFacultyByStudentId(studentId);
     }
+
+    @GetMapping("/maxlongnamefaculty")
+    public String maxLongNameFaculty() {
+        return facultyService.maxLongNameFaculty();
+    }
 }

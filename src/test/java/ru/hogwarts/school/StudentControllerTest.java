@@ -53,37 +53,37 @@ public class StudentControllerTest{
 
     @Test
     void testCreateStudent() {
-        Student student = new Student(null, "Кени", 13);
+        Student student = new Student(null, "Кени", 17);
         ResponseEntity<Student> response = restTemplate.postForEntity(baseUrl, student, Student.class);
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         Assertions.assertThat(Objects.requireNonNull(response.getBody()).getId()).isNotNull();
         Assertions.assertThat(response.getBody().getName()).isEqualTo("Кени");
-        Assertions.assertThat(response.getBody().getAge()).isEqualTo(13);
+        Assertions.assertThat(response.getBody().getAge()).isEqualTo(17);
     }
 
     @Test
     void testGetStudentInfo() {
-        Student student = studentService.addStudent(new Student(null, "Володя", 12));
+        Student student = studentService.addStudent(new Student(null, "Володя", 17));
         ResponseEntity<Student> response = restTemplate.getForEntity(baseUrl + "/" + student.getId(), Student.class);
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(Objects.requireNonNull(response.getBody()).getName()).isEqualTo("Володя");
-        Assertions.assertThat(response.getBody().getAge()).isEqualTo(12);
+        Assertions.assertThat(response.getBody().getAge()).isEqualTo(17);
     }
 
     @Test
     void testEditStudent() {
-        Student student = studentService.addStudent(new Student(null, "Алексий", 13));
+        Student student = studentService.addStudent(new Student(null, "Алексий", 17));
         student.setName("Серожа");
-        student.setAge(14);
+        student.setAge(18);
 
         restTemplate.put(baseUrl, student);
 
         ResponseEntity<Student> response = restTemplate.getForEntity(baseUrl + "/" + student.getId(), Student.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(Objects.requireNonNull(response.getBody()).getName()).isEqualTo("Серожа");
-        Assertions.assertThat(response.getBody().getAge()).isEqualTo(14);
+        Assertions.assertThat(response.getBody().getAge()).isEqualTo(18);
     }
 
     // Хотим обновить несуществующего студента
@@ -107,11 +107,11 @@ public class StudentControllerTest{
 
     @Test
     void testFindStudentsByAge() {
-        studentService.addStudent(new Student(null, "Али Баба", 10));
-        studentService.addStudent(new Student(null, "Нурсултан", 11));
-        studentService.addStudent(new Student(null, "Жорик", 10));
+        studentService.addStudent(new Student(null, "Али Баба", 17));
+        studentService.addStudent(new Student(null, "Нурсултан", 18));
+        studentService.addStudent(new Student(null, "Жорик", 17));
 
-        ResponseEntity<List> response = restTemplate.getForEntity(baseUrl + "?age=10", List.class);
+        ResponseEntity<List> response = restTemplate.getForEntity(baseUrl + "?age=17", List.class);
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(Objects.requireNonNull(response.getBody()).size()).isEqualTo(2);
@@ -119,11 +119,11 @@ public class StudentControllerTest{
 
     @Test
     void testFindStudentsByAgeBetween() {
-        studentService.addStudent(new Student(null, "Али Баба", 10));
-        studentService.addStudent(new Student(null, "Нурсултан", 11));
-        studentService.addStudent(new Student(null, "Жорик", 12));
+        studentService.addStudent(new Student(null, "Али Баба", 16));
+        studentService.addStudent(new Student(null, "Нурсултан", 17));
+        studentService.addStudent(new Student(null, "Жорик", 18));
 
-        ResponseEntity<List> response = restTemplate.getForEntity(baseUrl + "?min=10&max=11", List.class);
+        ResponseEntity<List> response = restTemplate.getForEntity(baseUrl + "?min=16&max=17", List.class);
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(Objects.requireNonNull(response.getBody()).size()).isEqualTo(2);

@@ -145,10 +145,10 @@ public class FacultyControllerTest {
     @Test
     void testGetStudentsByFaculty() {
         Faculty faculty = facultyService.addFaculty(new Faculty(null, "ТраЛЯЛЯ", "зеленый"));
-        Student student1 = new Student(null, "Висло", 11);
+        Student student1 = new Student(null, "Висло", 16);
         student1.setFaculty(faculty);
         studentService.addStudent(student1);
-        Student student2 = new Student(null, "ЧегоСла", 11);
+        Student student2 = new Student(null, "ЧегоСла", 17);
         student2.setFaculty(faculty);
         studentService.addStudent(student2);
 
@@ -169,7 +169,7 @@ public class FacultyControllerTest {
     @Test
     void testGetFacultyByStudentId() {
         Faculty faculty = facultyService.addFaculty(new Faculty(null, "ТраЛЯЛЯ", "зеленый"));
-        Student student = new Student(null, "Висло", 11);
+        Student student = new Student(null, "Висло", 16);
         student.setFaculty(faculty);
         studentService.addStudent(student);
 
