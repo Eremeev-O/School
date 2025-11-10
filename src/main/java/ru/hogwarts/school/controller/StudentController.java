@@ -81,5 +81,15 @@ public class StudentController {
         return studentService.integerValueCalculation();
     }
 
+    @GetMapping("/students/print-parallel")
+    public void printOfTerminalNameStudent() {
+        studentService.printOfTerminalNameStudent();
+    }
+
+    @GetMapping("/students/print-synchronized")
+    public void printOfTerminalNameStudentSynchronized() {
+        studentService.printOfTerminalNameStudentSynchronized();
+    }
+
 
 }

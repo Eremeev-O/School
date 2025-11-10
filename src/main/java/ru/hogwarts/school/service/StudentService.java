@@ -15,6 +15,7 @@ import java.util.stream.LongStream;
 
 @Service
 public class StudentService {
+    private final Object flag = new Object();
     private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
     private final StudentRepository studentRepository;
 
@@ -114,5 +115,55 @@ public class StudentService {
         long endTime = System.nanoTime();
         System.out.println("Время выполнения :" + (endTime - startTime)/1000000 + "мс");
             return sum;
+    }
+
+    public void printNameStudentParallel(int id, String string){
+        System.out.println("Студент №" + id + ": " + string);
+        }
+
+    public void printOfTerminalNameStudent() {
+        ArrayList<String> arrayStudent = studentRepository.printOfTerminalNameStudent();
+
+        printNameStudentParallel(1,arrayStudent.get(0));
+        printNameStudentParallel(2,arrayStudent.get(1));
+
+        new Thread(() -> {
+            printNameStudentParallel(3,arrayStudent.get(2));
+            printNameStudentParallel(4,arrayStudent.get(3));
+        }).start();
+
+        new Thread(() -> {
+            printNameStudentParallel(5,arrayStudent.get(4));
+            printNameStudentParallel(6,arrayStudent.get(5));
+        }).start();
+
+    }
+
+    public void printNameStudentSynchronized(int id, String string){
+        synchronized (flag) {
+            System.out.println("Студент №" + id + ": " + string);
+        }
+        // Не стал усложнять метод, т.к. есть понимание, что сюда можно напихать код, который не будет привязан к флагу
+        // (синхронизации)
+    }
+
+    public void printOfTerminalNameStudentSynchronized() {
+        ArrayList<String> arrayStudent = studentRepository.printOfTerminalNameStudent();
+
+        printNameStudentSynchronized(1,arrayStudent.get(0));
+        printNameStudentSynchronized(2,arrayStudent.get(1));
+
+        new Thread(() -> {
+            printNameStudentSynchronized(3,arrayStudent.get(2));
+            // В это место тоже можно добавить задачи, которые сдвинут по времени синхронизацию по выполняемым методам
+            // печати имен студентов. Таким образом получим иной порядок печати имен студентов.
+            printNameStudentSynchronized(4,arrayStudent.get(3));
+        }).start();
+
+        new Thread(() -> {
+            printNameStudentSynchronized(5,arrayStudent.get(4));
+            printNameStudentSynchronized(6,arrayStudent.get(5));
+        }).start();
+
     }
 }
